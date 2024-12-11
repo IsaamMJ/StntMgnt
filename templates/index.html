@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - Homepage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <script>
+        // Sort table by column
+        function sortTable(columnIndex) {
+            const table = document.getElementById("studentsTable");
+            const rows = Array.from(table.rows).slice(1); // Exclude header row
+            const isAscending = table.getAttribute("data-sort-direction") !== "asc";
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].innerText.trim();
+                const cellB = rowB.cells[columnIndex].innerText.trim();
+                return isAscending
+                    ? cellA.localeCompare(cellB, undefined, { numeric: true })
+                    : cellB.localeCompare(cellA, undefined, { numeric: true });
+            });
+            rows.forEach(row => table.tBodies[0].appendChild(row)); // Reorder rows
+            table.setAttribute("data-sort-direction", isAscending ? "asc" : "desc");
+        }
+
+        // Search table by keyword
+        function searchStudent() {
+            const searchInput = document.getElementById("search").value.toLowerCase();
+            const table = document.getElementById("studentsTable");
+            const rows = Array.from(table.rows).slice(1); // Exclude header row
+            rows.forEach(row => {
+                const cells = Array.from(row.cells).map(cell => cell.innerText.toLowerCase());
+                const matches = cells.some(cell => cell.includes(searchInput));
+                row.style.display = matches ? "" : "none"; // Hide non-matching rows
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a> <!-- Home Link -->
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a> <!-- Register Link -->
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a> <!-- Upload Link -->
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
+    </nav>
+    
+    <h1>Student Management</h1>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search by Name, Admission No, or Class">
+        <button onclick="searchStudent()">Search</button>
+        <a href="{{ url_for('register') }}">
+            <button>Add New Student</button>
+        </a>
+    </div>
+
+    <!-- Student Table -->
+    <table id="studentsTable" data-sort-direction="asc">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Admission No &#9650;&#9660;</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date of Birth</th>
+                <th onclick="sortTable(4)">Class &#9650;&#9660;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.Admission_No }}</td>
+                <td>{{ student.First_Name }}</td>
+                <td>{{ student.Last_Name }}</td>
+                <td>{{ student.Date_of_Birth }}</td>
+                <td>{{ student.Class }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+"parameters": {
+  "inputFilePattern": "gs://06_stntmgntmodule/test.csv",
+  "JSONPath": "gs://06_stntmgntmodule_metadata/bq.json",
+  "outputTable": "optimum-tea-441710-k7:06_stnfmgnt.studentmgnt",
+  "bigQueryLoadingTemporaryDirectory": "gs://06_stntmgntmodule_metadata",
+  "javascriptTextTransformGcsPath": "gs://06_stntmgntmodule_metadata/udf.js"
+}
+}

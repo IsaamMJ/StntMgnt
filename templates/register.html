@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register New Student</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a> <!-- Home Link -->
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a> <!-- Register Link -->
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a> <!-- Upload Link -->
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
+    </nav>
+
+    <h1>Register New Student</h1>
+
+    <!-- Student Registration Form -->
+    <form method="POST" action="/register-student" enctype="multipart/form-data">
+        <!-- Academic Details -->
+        <h2>Academic Details</h2>
+        <label>Academic Year *</label>
+        <select id="academicYear" name="academicYear" required>
+            <option value="2024-2025"  selected>2024-2025</option>
+        </select>
+
+        <label>Admission No. *</label>
+        <input type="text" id="admissionNo" name="admissionNo" value="{{ admission_number }}" readonly required><br><br>
+
+        <label>Admission Date *</label>
+        <input type="date" id="admissionDate" name="admissionDate" required>
+
+        <!-- Personal Details -->
+        <h2>Personal Details</h2>
+        <label>First Name *</label>
+        <input type="text"  name="firstName" id="firstName" required>
+
+        <label>Last Name</label>
+        <input type="text" name="lastName" id="lastName">
+
+        <label>Gender *</label>
+        <select id="gender" name="gender" required>
+            <option value="" disabled selected>Please Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Date of Birth *</label>
+        <input type="date" id="dob" name="dateOfBirth" required>
+
+
+        <label>Class *</label>
+<select id="class" name="class" required>
+    <option value="" disabled selected>Please Select</option>
+    <option value="Pre-KG">Pre-KG</option>
+    <option value="LKG">LKG</option>
+    <option value="UKG">UKG</option>
+    <option value="Grade 1">Grade 1</option>
+    <option value="Grade 2">Grade 2</option>
+    <option value="Grade 3">Grade 3</option>
+    <option value="Grade 4">Grade 4</option>
+    <option value="Grade 5">Grade 5</option>
+    <option value="Grade 6">Grade 6</option>
+    <option value="Grade 7">Grade 7</option>
+    <option value="Grade 8">Grade 8</option>
+    <option value="Grade 9">Grade 9</option>
+    <option value="Grade 10">Grade 10</option>
+    <option value="Grade 11">Grade 11</option>
+    <option value="Grade 12">Grade 12</option>
+</select>
+
+<label>Specialization *</label>
+<select id="specialization" name="specialization" required>
+    <option value="Nill" selected>Nill</option>
+    <option value="PCCM">PCCM</option>
+    <option value="PCBZ">PCBZ</option>
+    <option value="PCBM">PCBM</option>
+    <option value="ACC">ACC</option>
+</select>
+
+<label for="section">Section:</label>
+    <select id="section" name="section" required>
+        <option value="">-- Select Section --</option>
+        <!-- Use JavaScript to dynamically populate this dropdown based on grade -->
+    </select><br><br>
+
+        <label>Registration/EMIS No.</label>
+        <input type="text" id="emisNo" name="registrationEmisNo">
+
+        <label>Religion *</label>
+        <select id="religion" name="religion" required>
+            <option value="" disabled selected>Please Select</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Muslim">Muslim</option>
+            <option value="Christian">Christian</option>
+        </select>
+        
+
+        <label>Caste *</label>
+        <select id="caste" name="caste" required>
+            <option value="" disabled selected>Please Select</option>
+            <option value="General">General</option>
+            <option value="OBC">OBC</option>
+            <option value="SC/ST">SC/ST</option>
+        </select>
+        
+
+        <label>Blood Group</label>
+        <select id="bloodGroup" name="bloodGroup">
+            <option value="" disabled selected>Please Select</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+        </select>
+        
+
+        <label>Student Mobile No.</label>
+        <input type="text" id="studentMobile" name="studentMobileNo">
+
+        <label>Student Email Id</label>
+        <input type="email" id="studentEmail" name="studentEmailId">
+
+        <label>Nationality</label>
+        <select id="nationality" onchange="toggleAadharField()" name="nationality">
+            <option value="" disabled selected>Please Select</option>
+            <option value="India">India</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Africa">Africa</option>
+            <option value="USA">USA</option>
+            <option value="Dubai">Dubai</option>
+        </select>
+
+        <label>Mother Tongue</label>
+        <select id="motherTongue" name="motherTongue">
+            <option value="" disabled selected>Please Select</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Telugu">Telugu</option>
+            <option value="Kannada">Kannada</option>
+            <option value="Malayalam">Malayalam</option>
+            <option value="English">Tulu</option>
+            <option value="Arabic">Konkani</option>
+        </select>
+
+        
+        
+        <label>Aadhar No</label>
+        <input type="text" id="aadharNo" name="aadharNo" disabled>
+
+
+
+        <!-- Family Details -->
+        <h2>Family Details</h2>
+        <label>Do you have any siblings?</label>
+        <button id="toggleSiblingName" onclick="toggleSiblingNameField()">Off</button>
+
+        <label>Is the sibling studying in the same school?</label>
+        <button id="toggleSiblingDetails" onclick="toggleSiblingDetailsField(event)">Off</button>
+        
+        
+        <div>
+            <label for="siblingAdmissionNo">Sibling Admission Number:</label>
+            <input type="text" id="siblingAdmissionNo" name="siblingAdmissionNo" />
+            <button type="button" onclick="fetchFamilyData()">Search</button>
+        </div>
+        
+               
+        
+        <label>Sibling Name</label>
+<input type="text" id="siblingName" name="siblingName">
+
+<label>Father's Name *</label>
+<input type="text" id="fatherName" name="fatherName" required>
+
+<label>Father's Mobile No. *</label>
+<input type="text" id="fatherMobile" name="fatherMobileNo" required>
+
+<label>Father's Email Id</label>
+<input type="email" id="fatherEmail" name="fatherEmailId">
+
+<label>Father's Occupation</label>
+<input type="text" id="fatherOccupation" name="fatherOccupation">
+
+<label>Mother's Name *</label>
+<input type="text" id="motherName" name="motherName" required>
+
+<label>Mother's Mobile No. *</label>
+<input type="text" id="motherMobile" name="motherMobileNo" required>
+
+<label>Mother's Email Id</label>
+<input type="email" id="motherEmail" name="motherEmailId" >
+
+<label>Mother's Occupation</label>
+<input type="text" id="motherOccupation" name="motherOccupation">
+
+<label>Guardian's Name</label>
+<input type="text" id="guardianName" name="guardianName">
+
+<label>Guardian's Mobile No.</label>
+<input type="text" id="guardianMobile" name="guardianMobileNo">
+
+<label>Guardian's Email Id</label>
+<input type="email" id="guardianEmail" name="guardianEmailId">
+
+<label>Guardian's Occupation</label>
+<input type="text" id="guardianOccupation" name="guardianOccupation">
+
+<label>Primary Person *</label>
+<select id="primaryPerson" name="primaryPerson" required>
+    <option value="" disabled selected>Please Select</option>
+    <option value="Father">Father</option>
+    <option value="Mother">Mother</option>
+    <option value="Guardian">Guardian</option>
+</select>
+
+<label>Father's Annual Income</label>
+<input type="number" id="fatherIncome" name="fatherAnnualIncome" value="0.0">
+
+<label>Mother's Annual Income</label>
+<input type="number" id="motherIncome" name="motherAnnualIncome" value="0.0">
+
+<label>Guardian's Annual Income</label>
+<input type="number" id="guardianIncome" name="guardianAnnualIncome" value="0.0">
+
+<!-- Address Details -->
+<h2>Address Details</h2>
+<label>Permanent Address *</label>
+<textarea id="permanentAddress" name="permanentAddress" required></textarea>
+
+<label>
+    <input type="checkbox" id="sameAsPermanent" onchange="copyPermanentAddress()" name="sameAsPermanentAddress"> Same as Permanent Address
+</label>
+
+<label>Present Address *</label>
+<textarea id="presentAddress" name="presentAddress" required></textarea>
+
+        <!-- Attachments -->
+        <h2>Attachments</h2>
+        <label>Student Photo</label>
+        <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*" />
+
+        <label>Birth Certificate</label>
+        <input type="file" id="birthCertificate" name="birthCertificate">
+
+        <label>Transfer Certificate</label>
+        <input type="file" id="transferCertificate" name="transferCertificate">
+
+        <label>Aadhaar UIDAI</label>
+        <input type="file" id="aadharUIDAI" name="aadhaarUidai">
+
+        <label>PAN Card</label>
+        <input type="file" id="panCard" name="panCard">
+
+        <label>Attachment 1</label>
+        <input type="file" id="attachment1" name="attachment1">
+
+        <label>Attachment 2</label>
+        <input type="file" id="attachment2" name="attachment2">
+
+        <label>Attachment 3</label>
+        <input type="file" id="attachment3" name="attachment3">
+
+        <button type="submit">Register Student</button>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+<script>
+    // Get references to the class and specialization dropdowns
+    const classDropdown = document.getElementById('class');
+    const specializationDropdown = document.getElementById('specialization');
+
+    // Function to toggle the specialization based on class
+    function toggleSpecialization() {
+        const selectedClass = classDropdown.value;
+
+        if (selectedClass === 'Grade 11' || selectedClass === 'Grade 12') {
+            // Enable the specialization dropdown if Grade 11 or Grade 12 is selected
+            specializationDropdown.disabled = false;
+        } else {
+            // Disable specialization and set it to 'Nill' for other grades
+            specializationDropdown.disabled = true;
+            specializationDropdown.value = 'Nill'; // Set to Nill when other grades are selected
+        }
+    }
+
+    // Attach the function to the class dropdown change event
+    classDropdown.addEventListener('change', toggleSpecialization);
+
+    // Run once on page load to initialize the state
+    toggleSpecialization();
+
+
+        function updateSections() {
+            // Get the selected grade
+            var grade = document.getElementById('class').value;
+            
+            // Get the sections dropdown
+            var sectionDropdown = document.getElementById('section');
+            
+            // Clear the current section options
+            sectionDropdown.innerHTML = '<option value="" disabled selected>Please Select</option>';
+
+            // Check if grade is selected and populate the sections
+            if (grade && gradeSections[grade]) {
+                var sectionsCount = gradeSections[grade];
+                
+                // Alphabetically label the sections (A, B, C, ...)
+                var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                
+                for (var i = 0; i < sectionsCount; i++) {
+                    var option = document.createElement('option');
+                    option.value = alphabet[i];  // Use the letter from the alphabet
+                    option.textContent = 'Section ' + alphabet[i];  // Display as Section A, Section B, etc.
+                    sectionDropdown.appendChild(option);
+                }
+            }
+        }
+
+        
+
+        // Attach the function to the class dropdown change event
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('class').addEventListener('change', function() {
+                updateSections();
+                toggleSpecialization();
+            });
+
+            // Run once on page load to initialize the state
+            updateSections();
+            toggleSpecialization();
+        });
+
+        async function updateSections() {
+            const classDropdown = document.getElementById("class");
+            const sectionDropdown = document.getElementById("section");
+            const selectedClass = classDropdown.value;
+
+            // Clear existing options in the section dropdown
+            sectionDropdown.innerHTML = "";
+
+            if (selectedClass) {
+                try {
+                    // Fetch section count from the server
+                    const response = await fetch(`/get-sections?class=${encodeURIComponent(selectedClass)}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Populate the section dropdown
+                        const sectionCount = data.sectionCount;
+                        const sectionOptions = [];
+                        for (let i = 0; i < sectionCount; i++) {
+                            const sectionLetter = String.fromCharCode(65 + i); // Generate A, B, C, etc.
+                            sectionOptions.push(`<option value="${sectionLetter}">${sectionLetter}</option>`);
+                        }
+                        sectionDropdown.innerHTML = sectionOptions.join("");
+                    } else {
+                        alert(data.error || "Failed to fetch sections.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching sections:", error);
+                    alert("An error occurred while fetching sections.");
+                }
+            }
+        }
+
+        function toggleAadharField() {
+        const nationality = document.getElementById('nationality').value;
+        const aadharField = document.getElementById('aadharNo');
+        if (nationality === 'India') {
+            aadharField.disabled = false;
+        } else {
+            aadharField.disabled = true;
+            aadharField.value = ''; // Clear the value if disabled
+        }
+    }
+
+    function toggleSiblingNameField() {
+        const siblingNameField = document.getElementById('siblingName');
+        const toggleButton = document.getElementById('toggleSiblingName');
+
+        if (siblingNameField.disabled) {
+            siblingNameField.disabled = false;
+            toggleButton.textContent = 'On';
+        } else {
+            siblingNameField.disabled = true;
+            siblingNameField.value = ''; // Clear the field if disabled
+            toggleButton.textContent = 'Off';
+        }
+    }
+
+    function toggleSiblingDetailsField(event) {
+    event.preventDefault(); // Prevent default button behavior
+
+    // Get the button element
+    const button = document.getElementById('toggleSiblingDetails');
+
+    // Check its current state and toggle it
+    if (button.innerText === "Off") {
+        button.innerText = "On"; // Update the button text to "On"
+        button.classList.add("active"); // Optional: Add a class for styling (e.g., green color)
+    } else {
+        button.innerText = "Off"; // Update the button text to "Off"
+        button.classList.remove("active"); // Optional: Remove the styling class
+    }
+
+    console.log("Sibling in school:", button.innerText === "On"); // Log the current state
+}
+
+
+    document.getElementById("siblingDetails").addEventListener('blur', fetchFamilyDetails);
+    document.getElementById("siblingDetails").addEventListener('input', fetchFamilyDetails);
+    
+
+    document.getElementById('searchButton').addEventListener('click', () => {
+    const siblingAdmissionNo = document.getElementById('siblingAdmissionNo').value;
+
+    if (!siblingAdmissionNo) {
+        alert("Please enter a Sibling Admission Number.");
+        return;
+    }
+
+    fetch(`/fetch-family-data?sibling_admission_no=${encodeURIComponent(siblingAdmissionNo)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Populate fields with family data
+                document.getElementById('parentName').value = data.data[0].Parent_Name || '';
+                document.getElementById('address').value = data.data[0].Address || '';
+                document.getElementById('phoneNumber').value = data.data[0].Phone_Number || '';
+            } else {
+                alert(data.error || "An error occurred.");
+            }
+        })
+        .catch(err => console.error('Error fetching family data:', err));
+});
+
+async function fetchFamilyData() {
+        const siblingAdmissionNo = document.getElementById("siblingAdmissionNo").value;
+
+        if (!siblingAdmissionNo) {
+            alert("Please enter the sibling admission number.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/fetch-family-data?sibling_admission_no=${siblingAdmissionNo}`);
+            const data = await response.json();
+
+            if (data.success) {
+                const familyData = data.data[0]; // Assuming one resultsiblingName
+                document.getElementById("siblingName").value = familyData["First_Name"] || "";
+                document.getElementById("fatherName").value = familyData["Father's_Name"] || "";
+                document.getElementById("fatherName").value = familyData["Father's_Name"] || "";
+                document.getElementById("fatherMobile").value = familyData["Father's_Mobile_No"] || "";
+                document.getElementById("fatherEmail").value = familyData["Father's_Email_Id"] || "";
+                document.getElementById("fatherOccupation").value = familyData["Father's_Occupation"] || "";
+                document.getElementById("motherName").value = familyData["Mother's_Name"] || "";
+                document.getElementById("motherMobile").value = familyData["Mother's_Mobile_No"] || "";
+                document.getElementById("motherEmail").value = familyData["Mother's_Email_Id"] || "";
+                document.getElementById("motherOccupation").value = familyData["Mother's_Occupation"] || "";
+                document.getElementById("guardianName").value = familyData["Guardian's_Name"] || "";
+                document.getElementById("guardianMobile").value = familyData["Guardian's_Mobile_No"] || "";
+                document.getElementById("guardianEmail").value = familyData["Guardian's_Email_Id"] || "";
+                document.getElementById("guardianOccupation").value = familyData["Guardian's_Occupation"] || "";
+                document.getElementById("primaryPerson").value = familyData["Primary_Person"] || "";
+                document.getElementById("fatherIncome").value = familyData["Father's_Annual_Income"] || 0.0;
+                document.getElementById("motherIncome").value = familyData["Mother's_Annual_Income"] || 0.0;
+                document.getElementById("guardianIncome").value = familyData["Guardian's_Annual_Income"] || 0.0;
+                document.getElementById("permanentAddress").value = familyData["Permanent_Address"] || 0.0;
+                document.getElementById("sameAsPermanent").value = familyData["Present_Address"] || 0.0;
+                document.getElementById("presentAddress").value = familyData["Same_as_Permanent_Address"] || 0.0;
+            } else {
+                alert(data.error || "No data found for the given sibling admission number.");
+            }
+        } catch (error) {
+            console.error("Error fetching family data:", error);
+            alert("An error occurred while fetching family data. Please try again.");
+        }
+    }
+
+    function copyPermanentAddress() {
+        const isChecked = document.getElementById("sameAsPermanent").checked;
+        const permanentAddress = document.getElementById("permanentAddress").value;
+        document.getElementById("presentAddress").value = isChecked ? permanentAddress : "";
+    }
+
+
+    document.getElementById("addStudentForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const formData = new FormData(this);
+
+        try {
+            // Send data to the server
+            const response = await fetch("/register-student", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                alert("Student registered successfully!");
+                // Optionally redirect to another page or clear the form
+                this.reset();
+            } else {
+                alert(result.error || "Failed to register the student.");
+            }
+        } catch (error) {
+            console.error("Error submitting the form:", error);
+            alert("An error occurred while submitting the form. Please try again.");
+        }
+    });
+</script>
+</html>

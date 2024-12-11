@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV File</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link active">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
+    </nav>
+
+    <!-- Page Title -->
+    <h1>Upload CSV File to Google Cloud Storage</h1>
+
+    <!-- Upload Form -->
+    <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">Select CSV File:</label>
+            <input 
+                type="file" 
+                id="file" 
+                name="file" 
+                accept=".csv" 
+                required 
+                aria-label="Select a CSV file to upload to Google Cloud Storage">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="upload-btn">Upload</button>
+        </div>
+    </form>
+
+    <!-- Optional Message Section -->
+    <div id="upload-messages" class="message-area">
+        <!-- Dynamic success/error messages will be inserted here -->
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script>
+        document.querySelector('form').onsubmit = function (event) {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+
+            // Check if the file is valid
+            if (!file || !file.name.endsWith('.csv')) {
+                alert('Please upload a valid CSV file.');
+                event.preventDefault();
+            }
+        };
+    </script>
+
+</body>
+</html>

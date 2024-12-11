@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Number Series</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style4.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+    </nav>
+
+    <h1>Admission Number Series Settings</h1>
+
+    <form method="POST">
+        <label>Starting Admission Number:</label>
+        <input type="number" name="start_number" value="{{ admission_series['start_number'] }}" required><br><br>
+    
+        <label>Admission Number Increment:</label>
+        <input type="number" name="increment" value="{{ admission_series['increment'] }}" required><br><br>
+    
+        <h2>Grade Sections Configuration</h2>
+        <button type="button" class="collapsible">Toggle Grade Sections</button>
+        <div class="content">
+            <div class="grade-sections">
+                {% for grade, sections in admission_series['grades'].items() %}
+                    <div>
+                        <label>{{ grade }} - Number of Sections:</label>
+                        <input type="number" name="sections_{{ grade }}" value="{{ sections }}" min="1" required>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <script>
+        // Collapsible section toggle for grade sections
+        var coll = document.getElementsByClassName("collapsible");
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
