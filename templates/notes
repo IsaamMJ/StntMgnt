@@ -5,3 +5,11 @@ updated
 456
 852
 741852
+
+cmd
+git add .
+git add notes
+git commit -m
+git push -u origin master 
+
+741852963
