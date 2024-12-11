@@ -3,7 +3,7 @@ from google.cloud import storage, bigquery
 import json
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.secret_key = "your-secret-key"  # Required for flash messages
 
 # Set up your GCS bucket name and project ID
@@ -186,7 +186,7 @@ def index():
     students = fetch_students_from_bigquery()
     print("Students fetched for index page:", students)  # Debugging log
     return render_template("index.html", students=students)
-
+   
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
