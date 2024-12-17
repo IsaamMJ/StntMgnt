@@ -12,9 +12,11 @@
     <nav class="navbar">
         <a href="{{ url_for('index') }}" class="nav-link">Home</a>
         <a href="{{ url_for('register') }}" class="nav-link">Register</a>
-        <a href="{{ url_for('upload') }}" class="nav-link active">Upload</a>
-        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
-    </nav>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('admission_log') }}" class="nav-link">AdmissionLog</a>
+        <a href="{{ url_for('reports') }}" class="nav-link">Reports</a>
+     </nav>
 
     <!-- Page Title -->
     <h1>Upload CSV File to Google Cloud Storage</h1>

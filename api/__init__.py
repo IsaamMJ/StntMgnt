@@ -6,6 +6,8 @@ import os
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.secret_key = "your-secret-key"  # Required for flash messages
 
+client = bigquery.Client()
+
 # Set up your GCS bucket name and project ID
 BUCKET_NAME = "06_stntmgntmodule1"
 PROJECT_ID = "sinuous-branch-444014-t6"
@@ -70,6 +72,12 @@ def save_admission_series(start_number, increment, grades):
     """Save the admission series settings to a JSON file"""
     with open(ADMISSION_SERIES_FILE, 'w') as f:
         json.dump({'start_number': start_number, 'increment': increment, 'grades': grades}, f)
+
+
+
+
+
+
 
 @app.route('/admission-series', methods=['GET', 'POST'])
 def admission_series():
@@ -453,7 +461,324 @@ def register_student():
         flash(f"An error occurred: {e}", "error")
         return jsonify(success=False, error=str(e))
     
+@app.route('/student_details', methods=['GET'])
+def student_details():
+    admission_no = request.args.get('admission_no')
 
+    if not admission_no:
+        return render_template('student_details.html', admission_no=None)
+    
+    try:
+        # Ensure admission_no is an integer
+        admission_no = int(admission_no)
+    except ValueError:
+        return "Invalid admission number", 400
+
+    query = f"""
+    SELECT `Academic_Year`, `Admission_No`, `Admission_Date`, `First_Name`, `Last_Name`, `Gender`, `Date_of_Birth`,
+           `Student_Type`, `Class`, `Specialization`, `Section`, `Registration_EMIS_No`, `Religion`, `Caste`, 
+           `Caste_and_Category`, `Blood_Group`, `Student_Mobile_No`, `Student_Email_Id`, `Mother_Tongue`, `Aadhar_No`, 
+           `Nationality`, `Sibling_Name`, `Sibling_Admission_No_and_Class`, `Father's_Name`, `Father's_Mobile_No`, 
+           `Father's_Email_Id`, `Father's_Occupation`, `Mother's_Name`, `Mother's_Mobile_No`, `Mother's_Email_Id`, 
+           `Mother's_Occupation`, `Guardian's_Name`, `Guardian's_Mobile_No`, `Guardian's_Email_Id`, `Guardian's_Occupation`, 
+           `Primary_Person`, `Father's_Annual_Income`, `Mother's_Annual_Income`, `Guardian's_Annual_Income`, 
+           `Permanent_Address`, `Present_Address`, `Same_as_Permanent_Address`, `Student_Photo`, `Birth_Certificate`, 
+           `Transfer_Certificate`, `Aadhaar_UIDAI`, `PAN_Card`, `Attachment_1`, `Attachment_2`, `Attachment_3`
+    FROM `stndmgnt06.stndmgnt6`
+    WHERE `Admission_No` = @admission_no
+    """
+
+    job_config = bigquery.QueryJobConfig(
+        query_parameters=[bigquery.ScalarQueryParameter("admission_no", "INT64", admission_no)]
+    )
+
+    # Execute the query
+    query_job = client.query(query, job_config=job_config)
+    results = query_job.result()
+
+    student = None
+    for row in results:
+        student = {
+        "Admission_No": row.get("Admission_No", "Not Available"),
+        "First_Name": row.get("First_Name", "Not Available"),
+        "Last_Name": row.get("Last_Name", "Not Available"),
+        "Date_of_Birth": row.get("Date_of_Birth", "Not Available"),
+        "Class": row.get("Class", "Not Available"),
+        "Specialization": row.get("Specialization", "Not Available"),
+        "Father_Name": row.get("Father's_Name", "Not Available"),
+        "Father_Mobile": row.get("Father's_Mobile_No", "Not Available"),
+        "Father_Email": row.get("Father's_Email_Id", "Not Available"),
+        "Father_Occupation": row.get("Father's_Occupation", "Not Available"),
+        "Mother_Name": row.get("Mother's_Name", "Not Available"),
+        "Mother_Mobile": row.get("Mother's_Mobile_No", "Not Available"),
+        "Mother_Email": row.get("Mother's_Email_Id", "Not Available"),
+        "Mother_Occupation": row.get("Mother's_Occupation", "Not Available"),
+        "Guardian_Name": row.get("Guardian's_Name", "Not Available"),
+        "Guardian_Mobile": row.get("Guardian's_Mobile_No", "Not Available"),
+        "Guardian_Email": row.get("Guardian's_Email_Id", "Not Available"),
+        "Guardian_Occupation": row.get("Guardian's_Occupation", "Not Available"),
+        "Permanent_Address": row.get("Permanent_Address", "Not Available"),
+        "Present_Address": row.get("Present_Address", "Not Available"),
+        "Photo": row.get("Student_Photo", "No Photo Available"),
+        "Birth_Certificate": row.get("Birth_Certificate", "No Photo Available"),
+        "Transfer_Certificate": row.get("Transfer_Certificate", "No Photo Available"),
+        "Aadhaar_UIDAI": row.get("Aadhaar_UIDAI", "No Photo Available"),
+        "PAN_Card": row.get("PAN_Card", "No Photo Available"),
+        "Attachment_1": row.get("Attachment_1", "No Photo Available"),
+        "Attachment_2": row.get("Attachment_2", "No Photo Available"),
+        "Attachment_3": row.get("Attachment_3", "No Photo Available"),
+    }
+        break
+
+    if not student:
+        return "No student data found", 404
+
+    # Debugging output
+    print("Student Data:", student)
+
+    return render_template('student_details.html', admission_no=admission_no, student=student)
+
+
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    try:
+        # Query to count total students
+        query = """
+            SELECT COUNT(*) AS total_students
+            FROM `stndmgnt06.stndmgnt6`;
+        """
+        
+        query_job = client.query(query)  # Run the query
+        result = query_job.result()  # Get the result
+        
+        # Extract the total count
+        total_students = 0
+        for row in result:
+            total_students = row["total_students"]
+
+        # Render the dashboard with the total count
+        return render_template('dashboard.html', total_students=total_students)
+    
+    except Exception as e:
+        print(f"Error fetching total students: {e}")
+        return render_template('dashboard.html', total_students="Error Fetching Data")
+    
+from datetime import datetime
+@app.route('/api/attendanceMetrics', methods=['GET'])
+def attendance_metrics():
+    try:
+        # Get the current date in YYYY-MM-DD format
+        current_date = datetime.now().strftime("%Y-%m-%d")
+
+        # Query to fetch attendance counts by class for the current date
+        query = """
+            SELECT Class, COUNT(*) AS present_count
+            FROM `Attendence.attendencestdnt`
+            WHERE date = @current_date AND status = 'Present'
+            GROUP BY Class
+            ORDER BY Class
+        """
+
+        # Execute the query
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("current_date", "STRING", current_date)
+            ]
+        )
+        query_job = client.query(query, job_config=job_config)
+        results = query_job.result()
+
+        # Process the results into labels and values
+        classes = []
+        attendance = []
+        for row in results:
+            classes.append(row["Class"])
+            attendance.append(row["present_count"])
+
+        # Return the data as JSON
+        return jsonify({"classes": classes, "attendance": attendance}), 200
+
+    except Exception as e:
+        print(f"Error fetching attendance metrics: {e}")
+        return jsonify({"error": "Failed to fetch attendance metrics", "details": str(e)}), 500
+
+    
+@app.route('/admission-log', methods=['GET', 'POST'])
+def admission_log():
+    return render_template('attendence_log.html')
+
+
+@app.route('/api/getStudents', methods=['GET'])
+def get_students():
+    try:
+        # Get class and section from query parameters
+        class_selected = request.args.get('class')
+        section_selected = request.args.get('section')
+
+        # Validate input
+        if not class_selected or not section_selected:
+            return jsonify({"error": "Class and Section are required"}), 400
+
+        # Parameterized query
+        query = """
+            SELECT Admission_No, First_Name, Gender
+            FROM `stndmgnt06.stndmgnt6`
+            WHERE Class = @class_selected AND Section = @section_selected
+        """
+
+        # Set query parameters
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("class_selected", "STRING", class_selected),
+                bigquery.ScalarQueryParameter("section_selected", "STRING", section_selected)
+            ]
+        )
+
+        # Execute the query
+        query_job = client.query(query, job_config=job_config)
+        results = query_job.result()
+
+        # Convert the results to a list of dictionaries
+        students = [
+            {
+                "id": row["Admission_No"],
+                "rollNo": row["Admission_No"],
+                "name": row["First_Name"],
+                "gender": row["Gender"]
+            }
+            for row in results
+        ]
+
+        return jsonify(students)  # Return student data as JSON
+
+    except Exception as e:
+        print(f"Error fetching students: {e}")
+        return jsonify({"error": "Failed to fetch students", "details": str(e)}), 500
+
+from datetime import datetime
+@app.route('/api/updateAttendance', methods=['POST'])
+def update_attendance():
+    try:
+        # Parse JSON data from the request
+        data = request.json
+        print(f"Received data: {data}")
+
+        # Validate required fields
+        required_fields = ["date", "class", "section", "attendance"]
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            return jsonify({"error": "Missing required fields", "missing_fields": missing_fields}), 400
+
+        # Validate attendance field
+        attendance = data.get("attendance")
+        if not isinstance(attendance, list) or not all(isinstance(record, dict) for record in attendance):
+            return jsonify({"error": "Invalid attendance format. Must be a list of records."}), 400
+
+        # Validate each attendance record
+        for record in attendance:
+            if "studentId" not in record or "status" not in record or "name" not in record or "gender" not in record:
+                return jsonify({"error": "Each attendance record must have 'studentId', 'status', 'name', and 'gender' fields."}), 400
+
+        # Parse and validate date
+        raw_date = data.get("date")
+        try:
+            date = datetime.strptime(raw_date, "%d/%m/%Y").strftime("%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use DD/MM/YYYY."}), 400
+
+        # Deduplicate records based on studentId
+        unique_attendance = {record["studentId"]: record for record in attendance}.values()
+
+        # Prepare rows for BigQuery
+        rows_to_insert = [
+            {
+                "date": date,
+                "Admission_No": record["studentId"],
+                "First_Name": record["name"],
+                "Gender": record["gender"],
+                "Class": data["class"],
+                "Section": data["section"],
+                "status": record["status"],
+            }
+            for record in unique_attendance
+        ]
+        print("Rows to insert:", rows_to_insert)
+
+        # Insert rows into BigQuery
+        table_id = "Attendence.attendencestdnt"
+        errors = client.insert_rows_json(table_id, rows_to_insert)
+        if errors:
+            print(f"BigQuery Insertion Errors: {errors}")
+            return jsonify({"error": "Failed to update attendance", "details": errors}), 500
+
+        return jsonify({"message": "Attendance updated successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
+
+@app.route('/api/generateReport', methods=['POST'])
+def generate_report():
+    try:
+        # Parse the incoming data
+        data = request.json
+        academic_year = data.get('academicYear')
+        class_selected = data.get('class')
+        section_selected = data.get('section')
+        gender_selected = data.get('gender')
+
+        # Validate the input fields
+        if not academic_year or not class_selected or not section_selected or not gender_selected:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Query to fetch student data based on the selected filters
+        query = """
+            SELECT Admission_No, First_Name, Gender, Class, Section, Academic_Year
+            FROM `stndmgnt06.stndmgnt6`
+            WHERE Academic_Year = @academic_year 
+            AND Class = @class_selected 
+            AND Section = @section_selected
+            AND Gender = @gender_selected
+        """
+
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[
+                bigquery.ScalarQueryParameter("academic_year", "STRING", academic_year),
+                bigquery.ScalarQueryParameter("class_selected", "STRING", class_selected),
+                bigquery.ScalarQueryParameter("section_selected", "STRING", section_selected),
+                bigquery.ScalarQueryParameter("gender_selected", "STRING", gender_selected),
+            ]
+        )
+
+        # Run the query
+        query_job = client.query(query, job_config=job_config)
+        results = query_job.result()
+
+        # Format the results as a list of dictionaries
+        students = [
+            {
+                "admissionNo": row["Admission_No"],
+                "name": row["First_Name"],
+                "gender": row["Gender"],
+                "class": row["Class"],
+                "section": row["Section"],
+                "academicYear": row["Academic_Year"]
+            }
+            for row in results
+        ]
+
+        # Return the student data as JSON
+        return jsonify(students)
+
+    except Exception as e:
+        print(f"Error fetching report: {e}")
+        return jsonify({"error": "Failed to generate report", "details": str(e)}), 500
+    
+    
+@app.route('/reports', methods=['GET', 'POST'])
+def reports():
+    return render_template('reports.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

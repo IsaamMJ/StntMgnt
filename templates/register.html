@@ -9,10 +9,13 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <a href="{{ url_for('index') }}" class="nav-link">Home</a> <!-- Home Link -->
-        <a href="{{ url_for('register') }}" class="nav-link">Register</a> <!-- Register Link -->
-        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a> <!-- Upload Link -->
-        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('admission_log') }}" class="nav-link">AdmissionLog</a>
+        <a href="{{ url_for('reports') }}" class="nav-link">Reports</a>
+        
     </nav>
 
     <h1>Register New Student</h1>

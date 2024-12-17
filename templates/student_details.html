@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style5.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('admission_log') }}" class="nav-link">AdmissionLog</a>
+        <a href="{{ url_for('reports') }}" class="nav-link">Reports</a>
+     </nav>
+
+    <div class="container">
+        <div class="header">
+            Student Details
+        </div>
+        <div class="section">
+            <h3>Personal Information</h3>
+            <div class="details">
+                <div><span>Admission No:</span> {{ student.Admission_No }}</div>
+                <div><span>First Name:</span> {{ student.First_Name | default('Not available') }}</div>
+                <div><span>Last Name:</span> {{ student.Last_Name | default('Not available') }}</div>
+                <div><span>Date of Birth:</span> {{ student.Date_of_Birth | default('Not available') }}</div>
+                <div><span>Class:</span> {{ student.Class | default('Not available') }}</div>
+                <div><span>Specialization:</span> {{ student.Specialization | default('Not available') }}</div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>Parent/Guardian Information</h3>
+            <div class="details">
+                <div><span>Father's Name:</span> {{ student.Father_Name | default('Not available') }}</div>
+                <div><span>Father's Mobile:</span> {{ student.Father_Mobile | default('Not available') }}</div>
+                <div><span>Father's Email:</span> {{ student.Father_Email | default('Not available') }}</div>
+                <div><span>Father's Occupation:</span> {{ student.Father_Occupation | default('Not available') }}</div>
+                <div><span>Mother's Name:</span> {{ student.Mother_Name | default('Not available') }}</div>
+                <div><span>Mother's Mobile:</span> {{ student.Mother_Mobile | default('Not available') }}</div>
+                <div><span>Mother's Email:</span> {{ student.Mother_Email | default('Not available') }}</div>
+                <div><span>Mother's Occupation:</span> {{ student.Mother_Occupation | default('Not available') }}</div>
+                <div><span>Guardian's Name:</span> {{ student.Guardian_Name | default('Not available') }}</div>
+                <div><span>Guardian's Mobile:</span> {{ student.Guardian_Mobile | default('Not available') }}</div>
+                <div><span>Guardian's Email:</span> {{ student.Guardian_Email | default('Not available') }}</div>
+                <div><span>Guardian's Occupation:</span> {{ student.Guardian_Occupation | default('Not available') }}</div>
+            </div>
+        </div>
+        <div class="section address">
+            <h3>Address</h3>
+            <div><strong>Permanent Address:</strong> {{ student.Permanent_Address | default('Not available') }}</div>
+            <div><strong>Present Address:</strong> {{ student.Present_Address | default('Not available') }}</div>
+        </div>
+        <div class="section documents">
+            <h3>Documents</h3>
+            <ul>
+                {% if student.Birth_Certificate %}
+                    <li><a href="{{ student.Birth_Certificate }}" target="_blank">Birth Certificate</a></li>
+                {% else %}
+                    <li>No birth certificate available.</li>
+                {% endif %}
+                
+                {% if student.Transfer_Certificate %}
+                    <li><a href="{{ student.Transfer_Certificate }}" target="_blank">Transfer Certificate</a></li>
+                {% else %}
+                    <li>No transfer certificate available.</li>
+                {% endif %}
+                
+                {% if student.Aadhaar_UIDAI %}
+                    <li><a href="{{ student.Aadhaar_UIDAI }}" target="_blank">Aadhar UIDAI</a></li>
+                {% else %}
+                    <li>No Aadhar card available.</li>
+                {% endif %}
+                
+                {% if student.PAN_Card %}
+                    <li><a href="{{ student.PAN_Card }}" target="_blank">PAN Card</a></li>
+                {% else %}
+                    <li>No PAN card available.</li>
+                {% endif %}
+                
+                {% if student.Attachment_1 %}
+                    <li><a href="{{ student.Attachment_1 }}" target="_blank">Attachment 1</a></li>
+                {% else %}
+                    <li>No Attachment 1 available.</li>
+                {% endif %}
+                
+                {% if student.Attachment_2 %}
+                    <li><a href="{{ student.Attachment_2 }}" target="_blank">Attachment 2</a></li>
+                {% else %}
+                    <li>No Attachment 2 available.</li>
+                {% endif %}
+                
+                {% if student.Attachment_3 %}
+                    <li><a href="{{ student.Attachment_3 }}" target="_blank">Attachment 3</a></li>
+                {% else %}
+                    <li>No Attachment 3 available.</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #333;
+}
+
+/* Container for Main Content */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Header Style */
+.header {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0077ff;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #0077ff;
+    padding-bottom: 10px;
+}
+
+/* Section Styles */
+.section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details {
+    background-color: #f9fafc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.details div {
+    padding: 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.details span {
+    font-weight: bold;
+}
+
+/* Close Button Style */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e63946;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Form Styling */
+form {
+    display: grid;
+    gap: 15px;
+}
+
+/* Input and Select Fields Styling */
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #f7f9fc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="text"]:focus, 
+select:focus {
+    outline: none;
+    border: 2px solid #0077ff;
+    background-color: #eef7ff;
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+    accent-color: #0077ff;
+}
+
+/* Buttons Styling */
+button {
+    background-color: #0077ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #003d7a;
+    transform: translateY(0);
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #333;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar a {
+    color: #f2f2f2;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 17px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: #333;
+}
+
+/* Toggle Button Style */
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #0077ff;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-left: 10px;
+}
+
+.toggle-btn:hover {
+    transform: scale(1.2);
+}
+
+.toggle-btn.open {
+    transform: rotate(90deg); /* Rotate arrow when the section is open */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .navbar a {
+        font-size: 15px;
+        padding: 8px 10px;
+    }
+}
+
+/* Keyframes for Fade-In Effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #f7f9fc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+select:focus {
+    outline: none;
+    border: 2px solid #0077ff;
+    background-color: #eef7ff;
+}

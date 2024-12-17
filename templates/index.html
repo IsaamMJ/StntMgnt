@@ -33,15 +33,21 @@
                 row.style.display = matches ? "" : "none"; // Hide non-matching rows
             });
         }
+
+        
     </script>
 </head>
 <body>
-
     <nav class="navbar">
-        <a href="{{ url_for('index') }}" class="nav-link">Home</a> <!-- Home Link -->
-        <a href="{{ url_for('register') }}" class="nav-link">Register</a> <!-- Register Link -->
-        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a> <!-- Upload Link -->
-        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a> <!-- admin Link -->
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('admission_log') }}" class="nav-link">AdmissionLog</a>
+        <a href="{{ url_for('reports') }}" class="nav-link">Reports</a>
+        
+        
     </nav>
     
     <h1>Student Management</h1>
@@ -55,7 +61,6 @@
         </a>
     </div>
 
-    <!-- Student Table -->
     <table id="studentsTable" data-sort-direction="asc">
         <thead>
             <tr>
@@ -64,6 +69,7 @@
                 <th>Last Name</th>
                 <th>Date of Birth</th>
                 <th onclick="sortTable(4)">Class &#9650;&#9660;</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -74,10 +80,19 @@
                 <td>{{ student.Last_Name }}</td>
                 <td>{{ student.Date_of_Birth }}</td>
                 <td>{{ student.Class }}</td>
+                <td>
+                    <form action="{{ url_for('student_details') }}" method="get" style="display:inline;">
+                        <input type="hidden" name="admission_no" value="{{ student.Admission_No }}">
+                        <button type="submit">View Details</button>
+                    </form>
+                </td>
+                
+            
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    
 
 </body>
 </html>

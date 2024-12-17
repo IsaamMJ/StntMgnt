@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style8.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+        <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+        <a href="{{ url_for('admission_series') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-link">Admin</a>
+        <a href="{{ url_for('admission_log') }}" class="nav-link">AdmissionLog</a>
+    </div>
+
+    <!-- Section 1: General -->
+    <div id="section1" class="section">
+        <h3>
+            Section 1 (General)
+            <button class="toggle-btn" type="button" onclick="toggleSectionVisibility('section1')">&#9660;</button>
+        </h3>
+        <div class="section-content">
+            <label for="academicYear">Academic Year:</label>
+            <select id="academicYear" name="academicYear">
+                <option value="" disabled selected>Select Academic Year</option>
+                <option value="2023-2024">2023-2024</option>
+                <option value="2024-2025">2024-2025</option>
+                <option value="2025-2026">2025-2026</option>
+                <option value="2026-2027">2026-2027</option>
+            </select>
+        </div>
+        
+    </div>
+    
+    <!-- Section 2: Student Info -->
+    <div id="section2" class="section">
+        <h3>
+            Section 2 (Student Info)
+            <button class="toggle-btn" type="button" onclick="toggleSectionVisibility('section2')">&#9660;</button>
+        </h3>
+        <div class="section-content">
+            <label><input type="checkbox" name="fields" value="First_Name"> First Name</label><br>
+            <label><input type="checkbox" name="fields" value="Last_Name"> Last Name</label><br>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br>
+    
+            <label><input type="checkbox" name="fields" value="Date_of_Birth"> Date of Birth</label><br>
+            <label for="class">Class:</label>
+            <select id="class" name="class">
+                <option value="">Select Class</option>
+                <option value="PREKG">PREKG</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <!-- Add other classes as needed -->
+            </select><br>
+            <label for="specialization">Specialization:</label>
+            <select id="specialization" name="specialization">
+                <option value="">Select Specialization</option>
+                <option value="Science">Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Arts">Arts</option>
+                <!-- Add more options as needed -->
+            </select><br>
+            <label for="section">Section:</label>
+            <select id="section" name="section">
+                <option value="">Select Section</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <!-- Add more sections as needed -->
+            </select><br>
+            <label><input type="checkbox" name="fields" value="Registration_EMIS_No"> Registration EMIS No</label><br>
+            <label for="bloodGroup">Blood Group:</label>
+            <select id="bloodGroup" name="bloodGroup">
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <!-- Add more options as needed -->
+            </select><br>
+            <label><input type="checkbox" name="fields" value="Student_Mobile_No"> Student Mobile No</label><br>
+            <label><input type="checkbox" name="fields" value="Student_Email_Id"> Student Email Id</label><br>
+            <label for="motherTongue">Mother Tongue:</label>
+            <select id="motherTongue" name="motherTongue">
+                <option value="">Select Mother Tongue</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Tamil">Tamil</option>
+                <!-- Add more options as needed -->
+            </select><br>
+        </div>
+    </div>
+    
+    <!-- Section 3: Religious -->
+    <div id="section3" class="section">
+        <h3>
+            Section 3 (Religious)
+            <button class="toggle-btn" type="button" onclick="toggleSectionVisibility('section3')">&#9660;</button>
+        </h3>
+        <div class="section-content">
+            <label for="religion">Religion:</label>
+            <select id="religion" name="religion">
+                <option value="">Select Religion</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Muslim">Muslim</option>
+                <option value="Christian">Christian</option>
+                <!-- Add more options as needed -->
+            </select><br>
+    
+            <label for="caste">Caste:</label>
+            <select id="caste" name="caste">
+                <option value="">Select Caste</option>
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+            </select><br>
+    
+            <label for="casteCategory">Caste and Category:</label>
+            <select id="casteCategory" name="casteCategory">
+                <option value="">Select Caste and Category</option>
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+            </select><br>
+    
+            <label for="nationality">Nationality:</label>
+            <select id="nationality" name="nationality">
+                <option value="">Select Nationality</option>
+                <option value="Indian">Indian</option>
+                <option value="Other">Other</option>
+            </select><br>
+        </div>
+    </div>
+    
+    <!-- Section 4: Student Docs -->
+    <div id="section4" class="section">
+        <h3>
+            Section 4 (Student Docs)
+            <button class="toggle-btn" type="button" onclick="toggleSectionVisibility('section4')">&#9660;</button>
+        </h3>
+        <div class="section-content">
+            <label><input type="checkbox" name="fields" value="Aadhar_No"> Aadhar No</label><br>
+        </div>
+    </div>
+    
+    <!-- Action buttons -->
+    <div class="section">
+        <button type="button" onclick="generateReport()">Generate Report</button>
+
+        <button type="button" onclick="downloadReport()">Download</button>
+    </div>
+
+    <div id="report-table" style="display:none;">
+        <h3>Generated Report</h3>
+        <table id="reportDetails">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+function generateReport() {
+    var formData = new FormData(document.getElementById('report-form'));
+    var jsonData = {};
+    formData.forEach((value, key) => {
+        if (jsonData[key]) {
+            if (Array.isArray(jsonData[key])) {
+                jsonData[key].push(value);
+            } else {
+                jsonData[key] = [jsonData[key], value];
+            }
+        } else {
+            jsonData[key] = value;
+        }
+    });
+
+    // Create the table rows dynamically based on the form data
+    var reportTable = document.getElementById('reportDetails').getElementsByTagName('tbody')[0];
+    reportTable.innerHTML = ""; // Clear previous data
+
+    // Loop through jsonData and create rows
+    for (var key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            var row = reportTable.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = key.replace(/_/g, ' '); // Format the key (e.g., "First_Name" -> "First Name")
+            cell2.innerHTML = Array.isArray(jsonData[key]) ? jsonData[key].join(', ') : jsonData[key];
+        }
+    }
+
+    // Show the report table after generation
+    document.getElementById('report-table').style.display = 'block';
+}
+
+
+        function downloadReport() {
+            // Implement logic to allow the user to download the report in CSV or PDF format
+            const format = prompt("Enter the format for download (csv/pdf):");
+
+            if (format && (format === "csv" || format === "pdf")) {
+                fetch('/api/downloadReport', {
+                    method: 'POST',
+                    body: JSON.stringify({ format: format }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.blob())
+                .then(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `report.${format}`;
+                    link.click();
+                })
+                .catch(error => console.error('Error downloading report:', error));
+            } else {
+                alert("Invalid format. Please enter 'csv' or 'pdf'.");
+            }
+        }
+
+
+
+    // Function to toggle visibility of sections
+    function toggleSectionVisibility(sectionId) {
+    var sectionContent = document.querySelector('#' + sectionId + ' .section-content');
+    var toggleButton = document.querySelector('#' + sectionId + ' .toggle-btn');
+    
+    if (sectionContent.style.display === 'none') {
+        sectionContent.style.display = 'block';
+        toggleButton.innerHTML = '&#9660;'; // Arrow down (open)
+    } else {
+        sectionContent.style.display = 'none';
+        toggleButton.innerHTML = '&#9654;'; // Arrow right (closed)
+    }
+}
+
+
+    </script>
+</body>
+</html>

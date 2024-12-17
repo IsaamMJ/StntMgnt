@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Logging</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style7.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+    <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+    <a href="{{ url_for('upload') }}" class="nav-link">Upload</a>
+    <a href="{{ url_for('admission_series') }}" class="nav-link">Admission Series</a>
+    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+    <a href="{{ url_for('admission_log') }}" class="nav-link">Admission Log</a>
+    <a href="{{ url_for('reports') }}" class="nav-link">Reports</a>
+  </nav>
+
+  <div class="container">
+    <div class="header">Attendance Logging</div>
+    <div class="section">
+      <h3>Select Class and Section</h3>
+      <div class="details">
+        <div>
+          <span>Class:</span>
+          <select id="class-select" name="class">
+            <option value="" disabled selected>Select Class</option>
+            <option value="PreKG">PreKG</option>
+            <option value="LKG">LKG</option>
+            <option value="UKG">UKG</option>
+            <option value="Grade 5">Grade 5</option>
+            <!-- Add other grades here -->
+          </select>
+        </div>
+        <div>
+          <span>Section:</span>
+          <select id="section-select">
+            <option value="" disabled selected>Select Section</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+        </div>
+        <div>
+          <span>Date:</span>
+          <input type="text" id="date" disabled />
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <table id="student-table" border="1" cellspacing="0" cellpadding="10">
+        <thead>
+          <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Attendance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Students will be populated here -->
+        </tbody>
+      </table>
+
+      <button id="select-all">Select All</button>
+      <button id="update-attendance">Update Attendance</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("date").value = new Date().toLocaleDateString("en-GB");
+
+    async function fetchStudents() {
+      const classSelected = document.getElementById("class-select").value;
+      const sectionSelected = document.getElementById("section-select").value;
+
+      if (!classSelected || !sectionSelected) {
+        alert("Please select both class and section.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/getStudents?class=${classSelected}&section=${sectionSelected}`);
+        if (!response.ok) throw new Error("Failed to fetch students");
+
+        const data = await response.json();
+        const tableBody = document.getElementById("student-table").querySelector("tbody");
+        tableBody.innerHTML = "";
+
+        data.forEach(student => {
+          const row = `
+            <tr>
+              <td>${student.rollNo}</td>
+              <td class="student-name">${student.name}</td>
+              <td class="student-gender">${student.gender}</td>
+              <td><input type="checkbox" class="attendance-checkbox" data-id="${student.id}" checked /></td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error(error);
+        alert("An error occurred while fetching students.");
+      }
+    }
+
+    document.getElementById("class-select").addEventListener("change", fetchStudents);
+    document.getElementById("section-select").addEventListener("change", fetchStudents);
+
+    document.getElementById("select-all").addEventListener("click", () => {
+      document.querySelectorAll(".attendance-checkbox").forEach(checkbox => {
+        checkbox.checked = true;
+      });
+    });
+
+    document.getElementById("update-attendance").addEventListener("click", async () => {
+      const classSelected = document.getElementById("class-select").value;
+      const sectionSelected = document.getElementById("section-select").value;
+      const date = document.getElementById("date").value;
+
+      if (!classSelected || !sectionSelected || !date) {
+        alert("Please select a class, section, and date.");
+        return;
+      }
+
+      const attendance = Array.from(document.querySelectorAll(".attendance-checkbox")).map(checkbox => {
+        const row = checkbox.closest("tr");
+        return {
+          studentId: checkbox.dataset.id,
+          name: row.querySelector(".student-name").textContent.trim(),
+          gender: row.querySelector(".student-gender").textContent.trim(),
+          status: checkbox.checked ? "Present" : "Absent"
+        };
+      });
+
+      try {
+        const response = await fetch("/api/updateAttendance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ class: classSelected, section: sectionSelected, date, attendance })
+        });
+
+        if (!response.ok) throw new Error("Failed to update attendance");
+        alert("Attendance updated successfully!");
+      } catch (error) {
+        console.error(error);
+        alert("An error occurred while updating attendance.");
+      }
+    });
+  </script>
+</body>
+</html>
